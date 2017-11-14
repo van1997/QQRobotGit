@@ -183,7 +183,7 @@ def onQQMessage(bot,contact,member,content):
         if member is not None:                                   #在QQ群中开启特定联系人关键词回复功能
             if isIn(int(member.qq),someoneReplyList,"number"):
                 for item in someoneReplyList:
-                    if item['number'==int(member.qq)]:
+                    if item['number']==int(member.qq):
                         if item['pattern']=='appro':            #模糊匹配
                             if keyword in content:
                                 bot.SendTo(contact,keywords['answer'].encode('utf-8'))
@@ -193,8 +193,10 @@ def onQQMessage(bot,contact,member,content):
                 return
         
         if isIn(content,keywordList,"keyword"):                  #在QQ群中开启特定关键词回复功能
-            bot.SendTo(contact,keywords['answer'].encode('utf-8'))
-            return
+            for item in keywordList:
+                if item['keyword']==content:
+                    bot.SendTo(contact,item['answer'].encode('utf-8'))
+                    return
 
         if (bot.isMe(contact, member) is False):
             bot.SendTo(contact,answer(content,contact).encode('utf-8'))
