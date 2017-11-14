@@ -180,19 +180,19 @@ def onQQMessage(bot,contact,member,content):
                         count[item][person]=0
 
     if isIn(qqNumber,replyList,"number"):                        #在这些联系人中开启自动回复功能
-        if member is not None:                                    #在QQ群中开启特定联系人关键词回复功能
+        if member is not None:                                   #在QQ群中开启特定联系人关键词回复功能
             if isIn(int(member.qq),someoneReplyList,"number"):
                 for item in someoneReplyList:
                     if item['number'==int(member.qq)]:
                         if item['pattern']=='appro':            #模糊匹配
                             if keyword in content:
                                 bot.SendTo(contact,keywords['answer'].encode('utf-8'))
-                        elif item['pattern']=='accur':          #精确匹配
+                        elif item['pattern']=='accur':           #精确匹配
                             if keyword==content:
                                 bot.SendTo(contact,keywords['answer'].encode('utf-8'))
                 return
         
-        if isIn(qqNumber,keywordList,"keyword"):                #在QQ群中开启特定关键词回复功能
+        if isIn(content,keywordList,"keyword"):                  #在QQ群中开启特定关键词回复功能
             bot.SendTo(contact,keywords['answer'].encode('utf-8'))
             return
 
