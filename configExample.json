@@ -1,0 +1,41 @@
+{
+"dbConfig":{
+	"host":"",
+	"user":"",
+	"passwd":"",
+	"db":"", 
+	"charset":""
+}
+,
+"apiConfig":{
+	"serviceApi":"",
+	"key":""
+}
+,
+"replyList":[
+    {"name":"","number":}
+]
+,
+"shutList":[
+    {"name":"","number":}
+]
+,
+"keywordList":[
+	{"keyword":"","answer":""}
+]
+,
+"signInList":[
+	{"name":"","number":}
+],
+"signInMember":[
+	{"name":"","number":}
+],
+"newsList":[
+	{"name":"","number":}
+],
+"someoneReplyList":[
+	{"name":"","number":,"pattern":"","keyword":"","answer":""},
+	{"name":"","number":,"pattern":"","keyword":"","answer":""}
+]
+
+}
