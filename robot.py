@@ -119,13 +119,8 @@ def signIn(bot,contact,member):
             bot.SendTo(contact,'服务器好像开小差了...'.encode('utf-8'))     
 
 def shut(bot,contact,member,warn):
-    gl = bot.List('group', contact.name)
-    if gl:
-        group = gl[0]
-        membs = bot.List(group, member.name)
-        if membs:
-            bot.GroupShut(group, membs, 60)
-            bot.SendTo(contact,warn.encode('utf-8'))
+    bot.GroupShut(group, membs, 60)
+    bot.SendTo(contact,warn.encode('utf-8'))
 
 @QQBotSlot
 def onQQMessage(bot,contact,member,content):
@@ -185,11 +180,11 @@ def onQQMessage(bot,contact,member,content):
                 for item in someoneReplyList:
                     if item['number']==int(member.qq):
                         if item['pattern']=='appro':            #模糊匹配
-                            if keyword in content:
-                                bot.SendTo(contact,keywords['answer'].encode('utf-8'))
+                            if item['keyword'] in content:
+                                bot.SendTo(contact,item['answer'].encode('utf-8'))
                         elif item['pattern']=='accur':           #精确匹配
-                            if keyword==content:
-                                bot.SendTo(contact,keywords['answer'].encode('utf-8'))
+                            if item['keyword']==content:
+                                bot.SendTo(contact,item['answer'].encode('utf-8'))
                 return
         
         if isIn(content,keywordList,"keyword"):                  #在QQ群中开启特定关键词回复功能
