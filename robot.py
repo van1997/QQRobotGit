@@ -147,7 +147,7 @@ def onQQMessage(bot,contact,member,content):
             signIn(bot,contact,member)
             return
 
-        if re.match(r'^(?!正在为你).*(查询|查一下).*积分.*',content) or re.match(r'.*积分.*查询.*',content):
+        if re.match(r'(?!.*正在为你).*(查询|查一下).*积分.*',content) or re.match(r'.*积分.*查询.*',content):
             bot.SendTo(contact,str(pointsTable(content,bot,contact)).encode('utf-8'))
             return
 
