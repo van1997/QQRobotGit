@@ -22,7 +22,7 @@ def parseJson():
 def increasePoints(qqNumber,points):
     db = pymysql.connect(host=dbConfig['host'],user=dbConfig['user'],passwd=dbConfig['passwd'],db=dbConfig['db'], charset=dbConfig['charset'])
     cursor = db.cursor()
-    cursor.execute('UPDATE signpoints SET points=points+(%s)  WHERE qqnumber=(%s)',(str(points),str(qqNumber)))
+    cursor.execute('UPDATE signpoints SET points=points+%s  WHERE qqnumber=%s'%(str(points),str(qqNumber)))
     db.commit()
     cursor.close()
     db.close()
@@ -30,7 +30,7 @@ def increasePoints(qqNumber,points):
 def queryPoints(qqNumber):
     db = pymysql.connect(host=dbConfig['host'],user=dbConfig['user'],passwd=dbConfig['passwd'],db=dbConfig['db'], charset=dbConfig['charset'])
     cursor = db.cursor()
-    cursor.execute('SELECT points FROM signpoints WHERE qqnumber=(%s)',(str(qqNumber)))
+    cursor.execute('SELECT points FROM signpoints WHERE qqnumber=%s'%(str(qqNumber)))
     data =cursor.fetchone()
     cursor.close()
     db.close()
@@ -63,16 +63,16 @@ def pointsTable(content,bot,contact):
 def signInRank(date,qqNumber):
     db = pymysql.connect(host=dbConfig['host'],user=dbConfig['user'],passwd=dbConfig['passwd'],db=dbConfig['db'], charset=dbConfig['charset'])
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM signinrank WHERE date=(%s) and qqnumber=(%s)',(date,str(qqNumber)))
+    cursor.execute('SELECT * FROM signinrank WHERE date=%s and qqnumber=%s'%(date,str(qqNumber)))
     
     if len(cursor.fetchall())!=0:
         cursor.close()
         db.close()
         return -1
     else:
-        cursor.execute('SELECT * FROM signinrank WHERE date=%s',(date))
+        cursor.execute('SELECT * FROM signinrank WHERE date=%s'%(date))
         signAmount=len(cursor.fetchall())
-        cursor.execute('INSERT INTO signinrank (date,rank,qqnumber) values (%s,%s,%s)',(date,str(signAmount+1),str(qqNumber)))
+        cursor.execute('INSERT INTO signinrank (date,rank,qqnumber) values (%s,%s,%s)'%(date,str(signAmount+1),str(qqNumber)))
         db.commit()
         cursor.close()
         db.close()
