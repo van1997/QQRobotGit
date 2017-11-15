@@ -34,8 +34,10 @@
 	{"name":"","number":}
 ],
 "someoneReplyList":[
-	{"name":"","number":,"pattern":"","keyword":"","answer":""},
-	{"name":"","number":,"pattern":"","keyword":"","answer":""}
+	{"name":"","number":,"pattern":"appro","keyword":"","answer":""},
+	{"name":"","number":,"pattern":"accur","keyword":"","answer":""}
+],
+"newsPushList":[
+	{"name":"","number":}
 ]
-
 }

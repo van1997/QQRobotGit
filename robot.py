@@ -5,7 +5,8 @@ import time
 import pymysql
 import re
 from prettytable import PrettyTable
-
+from newsSpider import *
+from qqbot import qqbotsched
 
 startime=time.time()            #发言计时开始时间，用于刷屏禁言
 endtime=time.time()+3            #发言计时结束时间，用于刷屏禁言
@@ -13,6 +14,7 @@ count={}                         #发言计数，用于刷屏禁言
 signInMember={}                    #签到人员
 dbConfig={}                        #数据库配置
 apiConfig={}                    #聊天机器人接口配置
+newsPushList={}
 
 def parseJson():
     f=open('config.json','r',encoding='utf-8')
@@ -113,6 +115,22 @@ def shut(bot,contact,member,warn):
     bot.GroupShut(group, membs, 60)
     bot.SendTo(contact,warn.encode('utf-8'))
 
+@qqbotsched(hour='9', minute='0')
+def newsPush(bot):
+    news=parse(getPage('http://news.163.com/rank'))
+    for member in newsPushList:
+        group= bot.List('group', str(member['number']))
+        buddy= bot.List('buddy', str(member['number']))
+        target=None
+        if group:
+            target=group
+        elif buddy:
+            target=buddy
+        if target:
+            for title in news:
+                bot.SendTo(target, title.encode('utf-8'))
+                time.sleep(1)
+
 @QQBotSlot
 def onQQMessage(bot,contact,member,content):
     global startime
@@ -121,6 +139,7 @@ def onQQMessage(bot,contact,member,content):
     global signInMember
     global dbConfig
     global apiConfig
+    global newsPushList
 
     qqNumber=int(contact.qq)                                    #当前联系人qq
     config=parseJson()                                            #加载配置文件
@@ -133,6 +152,7 @@ def onQQMessage(bot,contact,member,content):
     shutList=config['shutList']                                    #开启禁言功能的群列表
     newsList=config['newsList']                                    #开启推送新闻功能的群列表
     someoneReplyList=config['someoneReplyList']                 #特定联系人关键词回复列表
+    newsPushList=config['newsPushList']                            #新闻推送联系人列表
 
     if isIn(qqNumber,signInList,"number"):                        #在这些群中开启签到和积分功能
         if content=='签到':                                #re.match(r'^(?!(.*?今天.*?)).*签到(?!成功).*',content):
