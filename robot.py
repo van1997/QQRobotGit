@@ -20,7 +20,7 @@ def parseJson():
     return json.loads(text)
 
 def increasePoints(qqNumber,points):
-    db = pymysql.connect(host=dbConfig['host'],user=dbConfig['root'],passwd=dbConfig['passwd'],db=dbConfig['master'], charset=dbConfig['charset'])
+    db = pymysql.connect(host=dbConfig['host'],user=dbConfig['user'],passwd=dbConfig['passwd'],db=dbConfig['db'], charset=dbConfig['charset'])
     cursor = db.cursor()
     cursor.execute('UPDATE signpoints SET points=points+(%S)  WHERE qqnumber=(%s)',(str(points),str(qqNumber)))
     db.commit()
@@ -28,7 +28,7 @@ def increasePoints(qqNumber,points):
     db.close()
 
 def queryPoints(qqNumber):
-    db = pymysql.connect(host=dbConfig['host'],user=dbConfig['root'],passwd=dbConfig['passwd'],db=dbConfig['master'], charset=dbConfig['charset'])
+    db = pymysql.connect(host=dbConfig['host'],user=dbConfig['user'],passwd=dbConfig['passwd'],db=dbConfig['db'], charset=dbConfig['charset'])
     cursor = db.cursor()
     cursor.execute('SELECT points FROM signpoints WHERE qqnumber=(%s)',(str(qqNumber)))
     data =cursor.fetchone()
@@ -37,15 +37,6 @@ def queryPoints(qqNumber):
     return data[0]
 
 def pointsTable(content):
-    name=''
-    if '我' in content:
-        for person in signInMember:
-            if person['number']==int(member.qq):
-                name=person['name']
-                content=content+name
-    if name=='':
-        bot.SendTo(contact,'你不在签到列表中，无法查询积分'.encode('utf-8'))
-
     table = PrettyTable(["姓 名", "积 分","排 名"])
     table.align["姓 名"] = "l"
     table.align["积 分"] = "l"
@@ -63,14 +54,14 @@ def pointsTable(content):
             table.add_row([infoList[i][0],str(infoList[i][1]),str(i+1)])
             exsistName=True
     if exsistName is False :
-        if re.mathch(r'.*查询.*+积分.*'):
+        if re.match(r'.*查询.*+积分.*',content):
             bot.SendTo(contact,'未在签到列表中找到该人，正在为你查询所有人的积分...'.encode('utf-8'))
         for i in range(len(infoList)):
             table.add_row([infoList[i][0],str(infoList[i][1]),str(i+1)])
     return table
 
 def signInRank(date,qqNumber):
-    db = pymysql.connect(host=dbConfig['host'],user=dbConfig['root'],passwd=dbConfig['passwd'],db=dbConfig['master'], charset=dbConfig['charset'])
+    db = pymysql.connect(host=dbConfig['host'],user=dbConfig['user'],passwd=dbConfig['passwd'],db=dbConfig['db'], charset=dbConfig['charset'])
     cursor = db.cursor()
     cursor.execute('SELECT * FROM signinrank WHERE date=(%s) and qqnumber=(%s)',(date,str(qqNumber)))
     
@@ -145,6 +136,14 @@ def onQQMessage(bot,contact,member,content):
 
     if isIn(qqNumber,signInList,"number"):                        #在这些群中开启签到和积分功能
         if content=='签到':                                #re.match(r'^(?!(.*?今天.*?)).*签到(?!成功).*',content):
+            if '我' in content:
+                name=''
+                for person in signInMember:
+                    if person['number']==int(member.qq):
+                        name=person['name']
+                        content=content+name
+                if name=='':
+                    bot.SendTo(contact,'你不在签到列表中，无法查询积分'.encode('utf-8'))
             signIn(bot,contact,member)
             return
 
