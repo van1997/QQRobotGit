@@ -136,6 +136,10 @@ def onQQMessage(bot,contact,member,content):
 
     if isIn(qqNumber,signInList,"number"):                        #在这些群中开启签到和积分功能
         if content=='签到':                                #re.match(r'^(?!(.*?今天.*?)).*签到(?!成功).*',content):
+            signIn(bot,contact,member)
+            return
+
+        if re.match(r'(?!.*正在为你).*(查询|查一下).*积分.*',content) or re.match(r'.*积分.*查询.*',content):
             if '我' in content:
                 name=''
                 for person in signInMember:
@@ -144,10 +148,6 @@ def onQQMessage(bot,contact,member,content):
                         content=content+name
                 if name=='':
                     bot.SendTo(contact,'你不在签到列表中，无法查询积分'.encode('utf-8'))
-            signIn(bot,contact,member)
-            return
-
-        if re.match(r'(?!.*正在为你).*(查询|查一下).*积分.*',content) or re.match(r'.*积分.*查询.*',content):
             bot.SendTo(contact,str(pointsTable(content,bot,contact)).encode('utf-8'))
             return
 
