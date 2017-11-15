@@ -36,7 +36,7 @@ def queryPoints(qqNumber):
     db.close()
     return data[0]
 
-def pointsTable(content):
+def pointsTable(content,bot,contact):
     table = PrettyTable(["姓 名", "积 分","排 名"])
     table.align["姓 名"] = "l"
     table.align["积 分"] = "l"
@@ -102,7 +102,7 @@ def signIn(bot,contact,member):
             if (6-rank)>0:
                 increasePoints(int(member.qq),points)
                 bot.SendTo(contact,('签到成功！'+name+'，你是今天第'+str(rank)+'个签到的！已加积分：'+str(6-rank)+'分\r\n正在为你查询当前积分...').encode('utf-8'))
-                bot.SendTo(contact,str(pointsTable(name)).encode('utf-8'))
+                bot.SendTo(contact,str(pointsTable(name,bot,contact)).encode('utf-8'))
             else:
                 bot.SendTo(contact,('签到成功！'+name+'，你是今天第'+str(rank)+'个签到的！前五个签到的人才有积分，继续努力！').encode('utf-8'))
         except Exception as  e:
@@ -147,8 +147,8 @@ def onQQMessage(bot,contact,member,content):
             signIn(bot,contact,member)
             return
 
-        if re.match(r'^(?!正在为你).*(查询|查一下).*积分.*',content) or re.match(r'.*积分.*查询.*',content):
-            bot.SendTo(contact,str(pointsTable(content)).encode('utf-8'))
+        if re.match(r'(?!.*正在为你).*(查询|查一下).*积分.*',content) or re.match(r'.*积分.*查询.*',content):
+            bot.SendTo(contact,str(pointsTable(content,bot,contact)).encode('utf-8'))
             return
 
     if isIn(qqNumber,shutList,"number"):                        #在这些群开启刷屏禁言功能
