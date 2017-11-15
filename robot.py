@@ -146,8 +146,8 @@ def onQQMessage(bot,contact,member,content):
                     if person['number']==int(member.qq):
                         name=person['name']
                         content=content+name
-                if name=='':
-                    bot.SendTo(contact,'你不在签到列表中，无法查询积分'.encode('utf-8'))
+                #if name=='':
+                #    bot.SendTo(contact,'你不在签到列表中，无法查询积分'.encode('utf-8'))
             bot.SendTo(contact,str(pointsTable(content,bot,contact)).encode('utf-8'))
             return
 
