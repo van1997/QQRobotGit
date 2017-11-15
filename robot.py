@@ -22,7 +22,7 @@ def parseJson():
 def increasePoints(qqNumber,points):
     db = pymysql.connect(host=dbConfig['host'],user=dbConfig['user'],passwd=dbConfig['passwd'],db=dbConfig['db'], charset=dbConfig['charset'])
     cursor = db.cursor()
-    cursor.execute('UPDATE signpoints SET points=points+(%S)  WHERE qqnumber=(%s)',(str(points),str(qqNumber)))
+    cursor.execute('UPDATE signpoints SET points=points+(%s)  WHERE qqnumber=(%s)',(str(points),str(qqNumber)))
     db.commit()
     cursor.close()
     db.close()
@@ -106,7 +106,7 @@ def signIn(bot,contact,member):
             else:
                 bot.SendTo(contact,('签到成功！'+name+'，你是今天第'+str(rank)+'个签到的！前五个签到的人才有积分，继续努力！').encode('utf-8'))
         except Exception as  e:
-            #print(str(e))
+            print(str(e))
             bot.SendTo(contact,'服务器好像开小差了...'.encode('utf-8'))     
 
 def shut(bot,contact,member,warn):
