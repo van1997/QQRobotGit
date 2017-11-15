@@ -54,7 +54,7 @@ def pointsTable(content):
             table.add_row([infoList[i][0],str(infoList[i][1]),str(i+1)])
             exsistName=True
     if exsistName is False :
-        if re.match(r'.*查询.*+积分.*',content):
+        if re.match(r'.*查询.+积分.*',content):
             bot.SendTo(contact,'未在签到列表中找到该人，正在为你查询所有人的积分...'.encode('utf-8'))
         for i in range(len(infoList)):
             table.add_row([infoList[i][0],str(infoList[i][1]),str(i+1)])
