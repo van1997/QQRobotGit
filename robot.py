@@ -123,9 +123,9 @@ def newsPush(bot):
         buddy= bot.List('buddy', str(member['number']))
         target=None
         if group:
-            target=group
+            target=group[0]
         elif buddy:
-            target=buddy
+            target=buddy[0]
         if target:
             for title in news:
                 bot.SendTo(target, title.encode('utf-8'))
