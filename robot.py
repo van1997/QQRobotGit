@@ -10,11 +10,12 @@ from qqbot import qqbotsched
 
 startime=time.time()            #发言计时开始时间，用于刷屏禁言
 endtime=time.time()+3            #发言计时结束时间，用于刷屏禁言
-count={}                         #发言计数，用于刷屏禁言
+count={}                        #发言计数，用于刷屏禁言
 signInMember={}                    #签到人员
 dbConfig={}                        #数据库配置
 apiConfig={}                    #聊天机器人接口配置
 newsPushList={}
+
 
 def parseJson():
     f=open('config.json','r',encoding='utf-8')
@@ -112,7 +113,9 @@ def signIn(bot,contact,member):
             bot.SendTo(contact,'服务器好像开小差了...'.encode('utf-8'))     
 
 def shut(bot,contact,member,warn):
-    bot.GroupShut(group, membs, 60)
+    group= bot.List('group', contact.qq)[0]
+    person=bot.List(group, member.qq)
+    bot.GroupShut(group, person, 60)
     bot.SendTo(contact,warn.encode('utf-8'))
 
 @qqbotsched(hour='9', minute='0')
@@ -172,23 +175,21 @@ def onQQMessage(bot,contact,member,content):
             return
 
     if isIn(qqNumber,shutList,"number"):                        #在这些群开启刷屏禁言功能
-        memberNumer=int(member.qq)
+        memberNumber=int(member.qq)
         if bot.isMe(contact,member) is False:
             currenttime=time.time()
             if currenttime<endtime :
-                if (memberNumer in count.keys()) is False:
-                    count[qqNumber][memberNumer]=1
+                if (qqNumber in count.keys()) is False:
+                    count[qqNumber]={}
+                    count[qqNumber][memberNumber]=1
                 else:
-                    count[qqnumber][member.qq]=count[qqnumber][memberNumer]+1
+                    count[qqNumber][memberNumber]=count[qqNumber][memberNumber]+1
             else:
                 startime=currenttime
                 endtime=currenttime+3
-                if memberNumer in count.keys():
-                    if count[qqnumber][memberNumer]>8:
+                if (qqNumber in count.keys()) and (memberNumber in count[qqNumber].keys()):
+                    if count[qqNumber][memberNumber]>6:
                         shut(bot,contact,member,'本群禁止刷屏')
-                        for key in count.keys():
-                            key=0
-                        return
                 for item in count.keys():
                     for person in count[item]:
                         count[item][person]=0
