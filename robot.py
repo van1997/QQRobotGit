@@ -162,7 +162,7 @@ def onQQMessage(bot,contact,member,content):
             bot.SendTo(contact,"范小乐已经开启了哦".encode('utf-8'))
             return
         else:
-            newReplyMember={"name":contact.name,"number":qqnumber}
+            newReplyMember={"name":contact.name,"number":qqNumber}
             replyList.append(newReplyMember)
             w=open('config.json','w',encoding='utf-8')
             w.write(json.dumps(config))
@@ -210,7 +210,7 @@ def onQQMessage(bot,contact,member,content):
 
     if isIn(qqNumber,replyList,"number"):                        #在这些联系人中开启自动回复功能
         if content=="范小乐 -stop":
-            for i in range(len(replyList):
+            for i in range(len(replyList)):
                 if replyList[i]["number"]==qqNumber:
                     index=i
             del replyList[index]
