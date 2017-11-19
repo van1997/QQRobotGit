@@ -157,6 +157,20 @@ def onQQMessage(bot,contact,member,content):
     someoneReplyList=config['someoneReplyList']                 #特定联系人关键词回复列表
     newsPushList=config['newsPushList']                            #新闻推送联系人列表
 
+    if content=="范小乐 -start":
+        if isIn(qqNumber,replyList,"number"):
+            bot.SendTo(contact,"范小乐已经开启了哦".encode('utf-8'))
+            return
+        else:
+            newReplyMember={"name":contact.name,"number":qqnumber}
+            replyList.append(newReplyMember)
+            w=open('config.json','w',encoding='utf-8')
+            w.write(json.dumps(config))
+            w.close()
+            bot.SendTo(contact,"范小乐开始工作".encode('utf-8'))
+            return
+
+
     if isIn(qqNumber,signInList,"number"):                        #在这些群中开启签到和积分功能
         if content=='签到':                                #re.match(r'^(?!(.*?今天.*?)).*签到(?!成功).*',content):
             signIn(bot,contact,member)
@@ -195,6 +209,17 @@ def onQQMessage(bot,contact,member,content):
                         count[item][person]=0
 
     if isIn(qqNumber,replyList,"number"):                        #在这些联系人中开启自动回复功能
+        if content=="范小乐 -stop":
+            for i in range(len(replyList):
+                if replyList[i]["number"]==qqNumber:
+                    index=i
+            del replyList[index]
+            w=open('config.json','w',encoding='utf-8')
+            w.write(json.dumps(config))
+            w.close()
+            bot.SendTo(contact,"范小乐先休息一会儿".encode('utf-8'))
+            return
+
         if member is not None:                                   #在QQ群中开启特定联系人关键词回复功能
             if isIn(int(member.qq),someoneReplyList,"number"):
                 for item in someoneReplyList:
